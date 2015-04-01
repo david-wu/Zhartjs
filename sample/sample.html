@@ -5,10 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Sample</title>
     <link rel="stylesheet" href="../Zhart.css">
+    <script src="../bower_components/d3/d3.js"></script>
+    <script src="../bower_components/lazy.js/lazy.js"></script>
+    <script src="../bower_components/lodash/lodash.js"></script>
+    <script src="../Zhart.js"></script>
 </head>
 <body>
-    <div class="sample">
-        This is a Sample.
+    <!-- Testing chart -->
+    <div id="zhart" style="display: inline-block">
     </div>
+    <div id="zhart2" style="display: inline-block">
+    </div>
+
+    <script>
+    window.onload = function () {
+        var context = document.getElementById('zhart');
+        window.zhart = new Zhart(context, {width: 200, height: 200})
+            .Microchart(null, {bgColor: 'blue'});
+
+        var context2 = document.getElementById('zhart2');
+        window.zhart2 = new Zhart(context2, {width: 100, height: 100})
+            .Microchart(null, {bgColor: 'yellow', text: 'context2'});
+    };
+    </script>
 </body>
 </html>
