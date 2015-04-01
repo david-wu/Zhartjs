@@ -1,0 +1,30 @@
+{
+  "name": "Zhart",
+  "version": "0.0.1",
+  "description": "Real time charting library.",
+  "main": "Zhart.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/esayemm/Zhart.git"
+  },
+  "author": "Sam Lau <sam.suifai.lau@gmail.com> (http://esayemm.github.io/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/esayemm/Zhart/issues"
+  },
+  "homepage": "https://github.com/esayemm/Zhart",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2",
+    "gulp-connect": "^2.2.0",
+    "gulp-html-validator": "0.0.5",
+    "gulp-jshint": "^1.9.4",
+    "gulp-replace": "^0.5.3",
+    "gulp-size": "^1.2.1",
+    "gulp-uglify": "^1.1.0",
+    "gulp-util": "^3.0.4"
+  }
+}
