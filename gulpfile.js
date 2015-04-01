@@ -19,9 +19,12 @@ var srcDir = './src/';
  */
 gulp.task('build', function () {
     var srcFiles = [srcDir + 'Zhart.Core.js'];
+    srcFiles.push(srcDir + 'Zhart.helpers.js');
     var outputDir = '.';
 
     srcFiles.push(srcDir+'*');
+
+    util.log(srcFiles);
 
     return gulp.src(srcFiles)
         .pipe(concat('Zhart.js'))
