@@ -1,0 +1,23 @@
+{
+  "name": "Zhart",
+  "main": "Zhart.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/esayemm/Zhart",
+  "authors": [
+    "Sam Lau <sam.suifai.lau@gmail.com>"
+  ],
+  "description": "Real time charting library.",
+  "license": "none",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "~3.5.5",
+    "lazy.js": "~0.4.0",
+    "lodash": "~3.6.0"
+  }
+}
