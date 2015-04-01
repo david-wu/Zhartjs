@@ -6,7 +6,10 @@ var gulp = require('gulp')
     , size = require('gulp-size')
     , connect = require('gulp-connect')
     , replace = require('gulp-replace')
-    , htmlv = require('gulp-html-validator');
+    , htmlv = require('gulp-html-validator')
+    , sass = require('gulp-sass')
+    , minifyCss = require('gulp-minify-css')
+    , concatCss = require('gulp-concat-css');
 
 var srcDir = './src/';
 
@@ -28,6 +31,18 @@ gulp.task('build', function () {
         .pipe(gulp.dest(outputDir));
 });
 
+gulp.task('buildCss', function () {
+    var srcFiles = [];
+    var outputDir = '.';
+
+    srcFiles.push('.tempcss/*');
+
+    return gulp.src(srcFiles)
+        .pipe(concatCss('Zhart.css'))
+        .pipe(minifyCss({keepBreaks:true}))
+        .pipe(gulp.dest(outputDir));
+});
+
 gulp.task('jshint', function () {
     return gulp.src(srcDir + '*.js')
         .pipe(jshint())
@@ -41,20 +56,27 @@ gulp.task('library-size', function () {
 
 gulp.task('module-sizes', function(){
     return gulp.src(srcDir + '*.js')
-    .pipe(uglify({preserveComments:'some'}))
-    .pipe(size({
-        showFiles: true,
-        gzip: true
-    }))
+        .pipe(uglify({preserveComments:'some'}))
+        .pipe(size({
+            showFiles: true,
+            gzip: true
+        }))
+});
+
+gulp.task('sass', function () {
+    return gulp.src('./scss/*.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('.tempcss'));
 });
 
 gulp.task('watch', function () {
+    gulp.watch('./scss/*', ['sass', 'buildCss']);
     gulp.watch('./src/*', ['build']);
 });
 
 gulp.task('size', ['library-size', 'module-sizes']);
 
-gulp.task('default', ['build', 'watch']);
+gulp.task('default', ['build', 'buildCss', 'watch']);
 
 gulp.task('server', function () {
     connect.server({port:8007});
