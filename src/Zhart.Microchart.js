@@ -13,12 +13,15 @@ Zhart.prototype.Microchart = function (datasets, options) {
         features[i](this, datasets, options);
     };
 
+    // Each microchart has its own layers
+    this.layers = layers.slice();
+
     this.redraw = function(){
         // TODO: Add autoScaling
         this.xScale.domain([0,10]);
         this.yScale.domain([0,10]);
         for(var i = 0; i < layers.length; i++){
-            layers[i](this, datasets, options);
+            this.layers[i](this, datasets, options);
         }
     }
 
@@ -38,7 +41,8 @@ Zhart.prototype.Microchart = function (datasets, options) {
 
 function backGround (zhart, datasets, options) {
     var bgColor = options.bgColor || 'black';
-    zhart.svg.style('background-color', bgColor);
+    zhart.svg
+        .style('background-color', bgColor);
 }
 
 function text (zhart, datasets, options) {
