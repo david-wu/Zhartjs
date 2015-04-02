@@ -44,7 +44,7 @@ root.Zhart = function Zhart (context, options) {
     this.yScale = d3.scale.linear()
         .range([this.height, 0]);
 
-    this.xScale = d3.time.scale()
+    this.xScale = d3.scale.linear()
         .range([0, this.width]);
 
     return this;
