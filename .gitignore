@@ -4,3 +4,6 @@ Zhart.js
 Zhart.min.js
 Zhart.css
 .tempcss
+.DS_Store
+client/
+src/.DS_Store

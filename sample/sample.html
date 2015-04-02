@@ -20,8 +20,9 @@
     <script>
     window.onload = function () {
         var context = document.getElementById('zhart');
+        var dataSets = [[{1:3, 2:5, 3:1}], [{1:1, 2:1, 3:5}]];
         window.zhart = new Zhart(context, {width: 200, height: 200})
-            .Microchart(null, {bgColor: 'blue'});
+            .Microchart(dataSets, {bgColor: 'blue'});
 
         var context2 = document.getElementById('zhart2');
         window.zhart2 = new Zhart(context2, {width: 100, height: 100})
