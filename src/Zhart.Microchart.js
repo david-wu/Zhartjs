@@ -15,10 +15,10 @@ Zhart.prototype.Microchart = function (datasets, options) {
 
     this.redraw = function(){
         // TODO: Add autoScaling
-        this.xScale.domain([0,10])
-        this.yScale.domain([0,10])
+        this.xScale.domain([0,10]);
+        this.yScale.domain([0,10]);
         for(var i = 0; i < layers.length; i++){
-            layers[i](this, datasets, options)
+            layers[i](this, datasets, options);
         }
     }
 
@@ -51,7 +51,7 @@ function text (zhart, datasets, options) {
 }
 
 
-// A layer that contains the xAxis
+// A layer that draws the xAxis
 function xAxis(zhart){
     var xAxis = d3.svg.axis()
         .scale(zhart.xScale)
@@ -68,7 +68,7 @@ function xAxis(zhart){
 }
 
 
-// A layer that contains the yAxis
+// A layer that draws the yAxis
 function yAxis(zhart){
     var yAxis = d3.svg.axis()
         .scale(zhart.yScale)
@@ -83,7 +83,28 @@ function yAxis(zhart){
             .call(yAxis);
 }
 
-// A layer that contains lines for linegraph
-function line(zhart){
+// A layer that draws lines for linegraph
+function line(zhart, datasets){
 
+    // Accepts data and returns a line path
+    var lineFunc = d3.svg.line()
+        .x(function(d){return zhart.xScale(d[0]);})
+        .y(function(d){return zhart.xScale(d[1]);});
+
+    // Accepts data and generates a class name
+    var classFunc = function(d, index){
+        return 'line '+index;
+    }
+
+    // Draws paths using datasets
+    zhart.vis.selectAll('path.line')
+        .data(datasets)
+        .enter()
+        .append('svg:path')
+            .attr('d', lineFunc)
+            .attr('class', classFunc)
+            // TODO: Improve classFunc and put these things in scss
+            .style('fill', 'none')
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1)
 }
