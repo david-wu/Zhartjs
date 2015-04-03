@@ -65,17 +65,28 @@ layers.line = function line(zhart, datasets){
         return 'line '+index;
     }
 
-    // Draws paths using datasets
-    zhart.vis.selectAll('path.line')
+    // Selects lines
+    var lines = zhart.vis.selectAll('path.line')
         .data(datasets)
-        .enter()
+
+    // Initializes lines
+    lines.enter()
         .append('svg:path')
-            .attr('d', lineFunc)
-            .attr('class', classFunc)
             // TODO: Improve classFunc and put these things in scss
             .style('fill', 'none')
             .attr('stroke', 'black')
-            .attr('stroke-width', 1);
+            .attr('stroke-width', 1.5);
+
+    // Updates lines
+    lines
+        .attr('d', lineFunc)
+        .attr('class', classFunc);
+
+    // Removes lines if they don't exist
+    lines
+        .exit()
+            .remove();
+
 };
 
 // A function that draws an area for linegraph
@@ -92,21 +103,32 @@ layers.area = function area(zhart, datasets){
         return 'area '+index;
     }
 
-    // Draws paths using datasets
-    zhart.vis.selectAll('path.area')
-        .data(datasets)
-        .enter()
+    // Selects areas
+    var areas = zhart.vis.selectAll('path.area')
+        .data(datasets);
+
+    // Initializes areas
+    areas.enter()
         .append('svg:path')
-            .attr('d', areaFunc)
-            .attr('class', classFunc)
             // TODO: Improve classFunc and put these things in scss
             .style('fill', 'red')
             .style('opacity', 0.5)
             .attr('stroke', 'none')
-            .attr('stroke-width', 1)
+            .attr('stroke-width', 0)
             .on('mouseover', function(){
                 console.log('ZHART')
             });
+
+    // Update areas
+    areas
+        .attr('d', areaFunc)
+        .attr('class', classFunc);
+
+    // Removes areas if they don't exist
+    areas
+        .exit()
+            .remove();
+
 };
 
 })(this);
