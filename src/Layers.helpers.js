@@ -1,21 +1,24 @@
 (function(root){
 
-var Zhart = root.Zhart;
-
 /*
 	layers lets you retrieve the corresponding layer functions
+	layer functions draw stuff on the chart everytime the chart is redrawn
 
 	Zhart.layers('xAxis', 'yAxis', 'line')
 		=> [func, func, func]
+
 	Zhart.layers['xAxis']
 		=> func
 */
 
+var Zhart = root.Zhart;
+
 Zhart.layers = function(){
-	return _.map(arguments, function(layer){
-		return Zhart.layers[layer];
-	})
+	return _.map(arguments, function(str){
+		return Zhart.layers[str];
+	});
 };
+
 var layers = Zhart.layers;
 
 // A layer that draws the xAxis
@@ -104,5 +107,6 @@ layers.area = function area(zhart, datasets){
             .on('mouseover', function(){
                 console.log('ZHART')
             });
-};	
+};
+
 })(this);
