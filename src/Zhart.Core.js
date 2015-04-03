@@ -42,9 +42,9 @@ root.Zhart = function Zhart (context, options) {
 
     // Scales used to draw within vis
     this.yScale = d3.scale.linear()
-        .range([0, this.height]);
+        .range([this.height, 0]);
 
-    this.xScale = d3.time.scale()
+    this.xScale = d3.scale.linear()
         .range([0, this.width]);
 
     return this;
