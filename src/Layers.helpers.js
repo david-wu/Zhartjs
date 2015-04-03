@@ -65,23 +65,28 @@ layers.line = function line(zhart, datasets){
         return 'line '+index;
     }
 
-    // Draws paths using datasets
-    zhart.vis.selectAll('path.line')
+    // Selects, enters, updates, then exits lines
+    var lines = zhart.vis.selectAll('path.line')
         .data(datasets)
-        .enter()
+    lines.enter()
         .append('svg:path')
-            .attr('d', lineFunc)
-            .attr('class', classFunc)
             // TODO: Improve classFunc and put these things in scss
             .style('fill', 'none')
             .attr('stroke', 'black')
-            .attr('stroke-width', 1);
+            .attr('stroke-width', 1.5);
+    lines
+        .attr('d', lineFunc)
+        .attr('class', classFunc);
+    lines
+        .exit()
+            .remove();
+
 };
 
 // A function that draws an area for linegraph
 layers.area = function area(zhart, datasets){
 
-    // Accepts data and returns a line path
+    // Accepts data and returns an area path
     var areaFunc = d3.svg.area()
         .x(function(d){return zhart.xScale(d[0]);})
         .y0(function(){return zhart.yScale(0);})
@@ -92,21 +97,26 @@ layers.area = function area(zhart, datasets){
         return 'area '+index;
     }
 
-    // Draws paths using datasets
-    zhart.vis.selectAll('path.area')
-        .data(datasets)
-        .enter()
+    // Selects, enters, updates, then exits areas
+    var areas = zhart.vis.selectAll('path.area')
+        .data(datasets);
+    areas.enter()
         .append('svg:path')
-            .attr('d', areaFunc)
-            .attr('class', classFunc)
             // TODO: Improve classFunc and put these things in scss
             .style('fill', 'red')
             .style('opacity', 0.5)
             .attr('stroke', 'none')
-            .attr('stroke-width', 1)
+            .attr('stroke-width', 0)
             .on('mouseover', function(){
                 console.log('ZHART')
             });
+    areas
+        .attr('d', areaFunc)
+        .attr('class', classFunc);
+    areas
+        .exit()
+            .remove();
+
 };
 
 })(this);
