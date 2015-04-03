@@ -3,7 +3,7 @@
 
 var Zhart = root.Zhart
 var features = Zhart.features('background', 'text');
-var layers = Zhart.layers('xAxis', 'yAxis', 'line', 'area');
+var layers = Zhart.layers('xAxis', 'yAxis', 'area', 'line');
 
 Zhart.prototype.Microchart = function (datasets, options) {
     var that = this;
@@ -34,7 +34,11 @@ Zhart.prototype.Microchart = function (datasets, options) {
     _.times(1000, function(){
         that.redraw();        
     });
-    console.log('1000 redraws took: ', Date.now() - t, 'ms');
+    console.log('1000 redraws took:', Date.now() - t, 'ms');
+
+    setInterval(function () {
+        that.redraw();
+    }, 1000);
 }
 
 }(this));

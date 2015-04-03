@@ -7,3 +7,4 @@ Zhart.css
 .DS_Store
 client/
 src/.DS_Store
+npm-debug.log
