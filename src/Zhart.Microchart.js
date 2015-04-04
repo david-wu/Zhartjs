@@ -2,7 +2,7 @@
 'use strict';
 
 var Zhart = root.Zhart
-var features = Zhart.features('background', 'text', 'dragYDomain', 'dragXDomain');
+var features = Zhart.features('background', 'text', 'dragXDomain');
 var layers = Zhart.layers('xAxis', 'yAxis', 'area', 'line');
 
 Zhart.prototype.Microchart = function (datasets, options) {
@@ -31,14 +31,14 @@ Zhart.prototype.Microchart = function (datasets, options) {
 
     // TODO: remove! (performance test)
     var t = Date.now();
-    _.times(1000, function(){
+    _.times(100, function(){
         that.redraw();        
     });
-    console.log('1000 redraws took:', Date.now() - t, 'ms');
+    console.log('100 redraws took:', Date.now() - t, 'ms');
 
     setInterval(function () {
         that.redraw();
-    }, 20);
+    }, 16);
 }
 
 }(this));

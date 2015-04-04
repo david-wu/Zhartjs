@@ -63,6 +63,11 @@ layers.yAxis = function yAxis(zhart){
 // A layer that draws lines for linegraph
 layers.line = function line(zhart, datasets){
 
+    // Trims off part of datasets that are outside of zhart.xDomain
+    datasets = _.map(datasets, function(dataset){
+        return dataset.selectIntersection(zhart.xDomain);
+    })
+
     // Accepts data and returns a line path
     var lineFunc = d3.svg.line()
         .x(function(d){return zhart.xScale(d[0]);})
@@ -93,6 +98,11 @@ layers.line = function line(zhart, datasets){
 
 // A function that draws an area for linegraph
 layers.area = function area(zhart, datasets){
+
+    // Trims off part of datasets that are outside of zhart.xDomain
+    datasets = _.map(datasets, function(dataset){
+        return dataset.selectIntersection(zhart.xDomain);
+    })
 
     // Accepts data and returns an area path
     var areaFunc = d3.svg.area()

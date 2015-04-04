@@ -22,20 +22,21 @@
         var context = document.getElementById('zhart');
 
         var dataSets = [
-            [[0,0]],
-            [[0,0]]
+            new DataSet([[-10,0]]),
+            new DataSet([[-10,0]])
         ];
+
 
         // Crappy fake data
         setInterval(function(){
             _.each(dataSets, function(set){
                 set.push([_.last(set)[0]+1, Math.random(10)*10]);
             });
-        },1000);
+        },100);
 
         var xDomain = new Domain({
             min: -10,
-            max: 50
+            max: 10
         });
 
         window.zhart = new Zhart(context, {
