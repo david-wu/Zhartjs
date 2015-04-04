@@ -33,11 +33,24 @@
             });
         },1000);
 
-        window.zhart = new Zhart(context, {width: 200, height: 200})
+        var xDomain = new Domain({
+            min: -10,
+            max: 50
+        });
+
+        window.zhart = new Zhart(context, {
+            width: 200,
+            height: 200,
+            xDomain: xDomain
+        })
             .Microchart(dataSets, {bgColor: 'blue'});
 
         var context2 = document.getElementById('zhart2');
-        window.zhart2 = new Zhart(context2, {width: 100, height: 100})
+        window.zhart2 = new Zhart(context2, {
+            width: 100,
+            height: 100,
+            xDomain: xDomain
+        })
             .Microchart(dataSets, {bgColor: 'yellow', text: 'context2'});
     };
     </script>

@@ -43,15 +43,25 @@ root.Zhart = function Zhart (context, options) {
     // Scales used to draw within vis
     this.yScale = d3.scale.linear()
         .range([this.height, 0]);
-
     this.xScale = d3.scale.linear()
         .range([0, this.width]);
+
+    // Determines which section of the chart to show
+    this.xDomain = options.xDomain || new Domain();
+    this.yDomain = options.yDomain || new Domain();
 
     return this;
 }
 
-Zhart.features = {
-
-}
-
 }(this));
+
+/*
+    TODO: MOVE THIS STUFF OUT!
+*/
+
+function Domain(options){
+    options = options || {};
+    this.push(options.min || 0);
+    this.push(options.max || 15);
+}
+Domain.prototype = new Array();
