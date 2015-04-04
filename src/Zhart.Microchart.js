@@ -2,7 +2,7 @@
 'use strict';
 
 var Zhart = root.Zhart
-var features = Zhart.features('background', 'text');
+var features = Zhart.features('background', 'text', 'dragXDomain');
 var layers = Zhart.layers('xAxis', 'yAxis', 'area', 'line');
 
 Zhart.prototype.Microchart = function (datasets, options) {
@@ -21,8 +21,8 @@ Zhart.prototype.Microchart = function (datasets, options) {
     this.redraw = function(){
 
         // TODO: Add autoScaling
-        this.xScale.domain([0,10]);
-        this.yScale.domain([0,10]);
+        this.xScale.domain(this.xDomain);
+        this.yScale.domain(this.yDomain);
 
         _.each(this.layers, function(layer){
             layer(that, datasets, options);
@@ -38,7 +38,7 @@ Zhart.prototype.Microchart = function (datasets, options) {
 
     setInterval(function () {
         that.redraw();
-    }, 1000);
+    }, 20);
 }
 
 }(this));
