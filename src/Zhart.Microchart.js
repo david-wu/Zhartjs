@@ -2,7 +2,7 @@
 'use strict';
 
 var Zhart = root.Zhart
-var features = Zhart.features('background', 'text', 'dragXDomain');
+var features = Zhart.features('background', 'text', 'dragYDomain', 'dragXDomain');
 var layers = Zhart.layers('xAxis', 'yAxis', 'area', 'line');
 
 Zhart.prototype.Microchart = function (datasets, options) {

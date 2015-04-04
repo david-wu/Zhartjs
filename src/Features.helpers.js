@@ -37,15 +37,19 @@ features.text = function text (zhart, datasets, options) {
 
 features.dragXDomain = function dragXDomain(zhart, datasets, options){
 
-	// Defines dragBehavior
-	var dragXDomain = d3.behavior.drag()
-		.on("dragstart", dragStart)
-		.on("drag", drag)
-		.on("dragend", dragEnd);
+	// Limit to one dragBehave per zhart.svg
+	var dragBehave = zhart.svg.dragBehave || d3.behavior.drag();
+	zhart.svg.dragBehave = dragBehave
+
+	// d3 events need to be namespaced
+	dragBehave
+		.on('dragstart.xDomain', dragStart)
+		.on('drag.xDomain', drag)
+		.on('dragend.xDomain', dragEnd);
 	function dragStart(d) {
 		d3.event.sourceEvent.stopPropagation();
 		d3.select(this)
-			.classed("dragging", true);
+			.classed('dragging', true);
 	}
 	function drag(d) {
 		var xShift = zhart.xScale.invert(0) - zhart.xScale.invert(d3.event.dx);
@@ -54,10 +58,37 @@ features.dragXDomain = function dragXDomain(zhart, datasets, options){
 	}
 	function dragEnd(d) {
 		d3.select(this)
-			.classed("dragging", false);
+			.classed('dragging', false);
 	}
+	zhart.svg.call(dragBehave);
+};
 
-	zhart.svg.call(dragXDomain);
+features.dragYDomain = function dragYDomain(zhart, datasets, options){
+
+	// Limit to one dragBehave per zhart.svg
+	var dragBehave = zhart.svg.dragBehave || d3.behavior.drag();
+	zhart.svg.dragBehave = dragBehave
+
+	// d3 events need to be namespaced
+	dragBehave
+		.on('dragstart.yDomain', dragStart)
+		.on('drag.yDomain', drag)
+		.on('dragend.yDomain', dragEnd);
+	function dragStart(d) {
+		d3.event.sourceEvent.stopPropagation();
+		d3.select(this)
+			.classed('dragging', true);
+	}
+	function drag(d) {
+		var yShift = zhart.yScale.invert(0) - zhart.yScale.invert(d3.event.dy);
+		zhart.yDomain[0] += yShift;
+		zhart.yDomain[1] += yShift;
+	}
+	function dragEnd(d) {
+		d3.select(this)
+			.classed('dragging', false);
+	}
+	zhart.svg.call(dragBehave);
 };
 
 })(this);

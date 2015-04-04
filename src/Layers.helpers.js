@@ -28,13 +28,17 @@ layers.xAxis = function xAxis(zhart){
         .orient('bottom')
         .ticks(3)
         .tickSize(1);
-    var xAxisSvg = zhart.vis.selectAll('g.x-axis')
-        .data([1])
-        .enter()
+    var xAxisGroup = zhart.vis.selectAll('g.x-axis')
+        .data([1]);
+    xAxisGroup.enter()
         .append('g')
-            .attr('class', 'x-axis')
-            .attr("transform", "translate(0," + zhart.height + ")")
-            .call(xAxis);
+            .attr('class', 'x-axis');
+    xAxisGroup
+        .attr("transform", "translate(0," + zhart.height + ")")
+        .call(xAxis);
+    xAxisGroup
+        .exit()
+            .remove();
 };
 
 // A layer that draws the yAxis
@@ -44,12 +48,16 @@ layers.yAxis = function yAxis(zhart){
         .orient('left')
         .ticks(3)
         .tickSize(1);
-    var yAxisSvg = zhart.vis.selectAll('g.y-axis')
-        .data([1])
-        .enter()
+    var yAxisGroup = zhart.vis.selectAll('g.y-axis')
+        .data([1]);
+    yAxisGroup.enter()
         .append('g')
-            .attr('class', 'y-axis')
-            .call(yAxis);
+            .attr('class', 'y-axis');
+    yAxisGroup
+        .call(yAxis);
+    yAxisGroup
+        .exit()
+            .remove();
 };
 
 // A layer that draws lines for linegraph
@@ -106,10 +114,7 @@ layers.area = function area(zhart, datasets){
             .style('fill', 'red')
             .style('opacity', 0.5)
             .attr('stroke', 'none')
-            .attr('stroke-width', 0)
-            .on('mouseover', function(){
-                console.log('ZHART')
-            });
+            .attr('stroke-width', 0);
     areas
         .attr('d', areaFunc)
         .attr('class', classFunc);
