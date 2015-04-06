@@ -26,6 +26,18 @@
             new DataSet([[-10,0]])
         ];
 
+        var xDomain = new Domain([-10, 10]);
+        var yDomain = new Domain([-10,10]);
+
+        window.zhart = new Zhart({
+            context: context,
+            width: 500,
+            height: 300,
+            dataSets: dataSets,
+            xDomain: xDomain,
+            yDomain: yDomain
+        })
+            .Microchart();
 
         // Crappy fake data
         setInterval(function(){
@@ -34,25 +46,6 @@
             });
         },100);
 
-        var xDomain = new Domain({
-            min: -10,
-            max: 10
-        });
-
-        window.zhart = new Zhart(context, {
-            width: 200,
-            height: 200,
-            xDomain: xDomain
-        })
-            .Microchart(dataSets, {bgColor: 'blue'});
-
-        var context2 = document.getElementById('zhart2');
-        window.zhart2 = new Zhart(context2, {
-            width: 100,
-            height: 100,
-            xDomain: xDomain
-        })
-            .Microchart(dataSets, {bgColor: 'yellow', text: 'context2'});
     };
     </script>
 </body>

@@ -34,7 +34,7 @@ layers.xAxis = function xAxis(zhart){
         .append('g')
             .attr('class', 'x-axis');
     xAxisGroup
-        .attr("transform", "translate(0," + zhart.height + ")")
+        .attr("transform", "translate(0," + zhart.visHeight + ")")
         .call(xAxis);
     xAxisGroup
         .exit()
@@ -61,11 +61,11 @@ layers.yAxis = function yAxis(zhart){
 };
 
 // A layer that draws lines for linegraph
-layers.line = function line(zhart, datasets){
+layers.line = function line(zhart){
 
     // Trims off part of datasets that are outside of zhart.xDomain
-    datasets = _.map(datasets, function(dataset){
-        return dataset.selectIntersection(zhart.xDomain);
+    var dataSets = _.map(zhart.dataSets, function(dataSet){
+        return dataSet.selectIntersection(zhart.xDomain);
     })
 
     // Accepts data and returns a line path
@@ -80,13 +80,13 @@ layers.line = function line(zhart, datasets){
 
     // Selects, enters, updates, then exits lines
     var lines = zhart.vis.selectAll('path.line')
-        .data(datasets)
+        .data(dataSets)
     lines.enter()
         .append('svg:path')
             // TODO: Improve classFunc and put these things in scss
             .style('fill', 'none')
             .attr('stroke', 'black')
-            .attr('stroke-width', 1.5);
+            .attr('stroke-width', 0.8);
     lines
         .attr('d', lineFunc)
         .attr('class', classFunc);
@@ -97,11 +97,11 @@ layers.line = function line(zhart, datasets){
 };
 
 // A function that draws an area for linegraph
-layers.area = function area(zhart, datasets){
+layers.area = function area(zhart){
 
     // Trims off part of datasets that are outside of zhart.xDomain
-    datasets = _.map(datasets, function(dataset){
-        return dataset.selectIntersection(zhart.xDomain);
+    var dataSets = _.map(zhart.dataSets, function(dataSet){
+        return dataSet.selectIntersection(zhart.xDomain);
     })
 
     // Accepts data and returns an area path
@@ -117,7 +117,7 @@ layers.area = function area(zhart, datasets){
 
     // Selects, enters, updates, then exits areas
     var areas = zhart.vis.selectAll('path.area')
-        .data(datasets);
+        .data(dataSets);
     areas.enter()
         .append('svg:path')
             // TODO: Improve classFunc and put these things in scss

@@ -35,7 +35,7 @@ features.text = function text (zhart, datasets, options) {
         .text(text);
 };
 
-features.dragXDomain = function dragXDomain(zhart, datasets, options){
+features.dragXDomain = function dragXDomain(zhart){
 
 	// Limit to one dragBehave per zhart.svg
 	var dragBehave = zhart.svg.dragBehave || d3.behavior.drag();
@@ -63,7 +63,7 @@ features.dragXDomain = function dragXDomain(zhart, datasets, options){
 	zhart.svg.call(dragBehave);
 };
 
-features.dragYDomain = function dragYDomain(zhart, datasets, options){
+features.dragYDomain = function dragYDomain(zhart){
 
 	// Limit to one dragBehave per zhart.svg
 	var dragBehave = zhart.svg.dragBehave || d3.behavior.drag();

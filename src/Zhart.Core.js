@@ -7,50 +7,101 @@
  * @param {svg}
  * @param {options}
  */
-root.Zhart = function Zhart (context, options) {
 
-    options = options || {};
+root.Zhart = function Zhart (zhart) {
+    var that = this;
 
-    var svgWidth = options.width
-        || document.defaultView.getComputedStyle(context).getPropertyValue('Width');
+    // Sets default values and allows users to overwrite them
+    _.defaults(this, {
+        layers: [],
+        features: [],
+        width: 300,
+        height: 200,
 
-    var svgHeight = options.height
-        || document.defaultView.getComputedStyle(context).getPropertyValue('Height');
+        // Margins seperate the labels, and axis from the center of the graph
+        margins: {
+            top: 10,
+            left: 30,
+            bottom: 30,
+            right:10
+        },
 
-    this.svg = d3.select(context)
+        // Scales used to draw within vis
+        yScale: d3.scale.linear(),
+        xScale: d3.scale.linear(),
+
+        // Determines which section of the chart to show
+        xDomain: new Domain(),
+        yDomain: new Domain(),
+
+    });
+    _.extend(this, zhart);
+
+    // A context must be provided.. for now..
+    if(!this.context){throw new TypeError('Context needed :( sorry')}
+    this.svg = d3.select(this.context)
         .append('svg')
-        .classed('zhart', true)
-        .attr('width', svgWidth)
-        .attr('height', svgHeight)
+        .classed('zhart', true);
 
-    // Margins seperate the labels, and axis from the center of the graph
-    this.margins = options.margins || {
-        top: 10,
-        left: 30,
-        bottom: 30,
-        right:10
-    };
-
-    // Contains most graphics, leaving margin room
-    this.width = svgWidth-this.margins.left-this.margins.right;
-    this.height = svgHeight-this.margins.top-this.margins.bottom;
     this.vis = this.svg.append('g')
-        .classed('vis', true)
-        .attr('width', this.width)
-        .attr('height', this.height)
-        .attr('transform', 'translate('+this.margins.left+','+this.margins.top+')');
+        .classed('vis', true);
 
-    // Scales used to draw within vis
-    this.yScale = d3.scale.linear()
-        .range([this.height, 0]);
-    this.xScale = d3.scale.linear()
-        .range([0, this.width]);
+    // Initializes features
+    _.each(this.features, function(feature){
+        feature(that, that.datasets);
+    })
 
-    // Determines which section of the chart to show
-    this.xDomain = options.xDomain || new Domain();
-    this.yDomain = options.yDomain || new Domain();
+    // TODO: remove! (performance test)
+    var tTime = 0;
+    setInterval(function () {
+        var t = Date.now();
+        that.redraw();
+        tTime += (Date.now() - t)
+    }, 16);
+    setInterval(function(){
+        console.log((tTime/10)+'% time spent redrawing');
+        tTime = 0;
+    }, 1000);
+
 
     return this;
+}
+
+// Draws each layer
+root.Zhart.prototype.redraw = function(){
+    var that = this;
+
+    this.resize();
+
+    // TODO: Add autoScaling
+    this.xScale.domain(this.xDomain);
+    this.yScale.domain(this.yDomain);
+
+    _.each(this.layers, function(layer){
+        layer(that);
+    });
+}
+
+// Resizes svg and vis based on width, height, and margins
+root.Zhart.prototype.resize = function(){
+
+    this.svg
+        .attr('width', this.width)
+        .attr('height', this.height);
+
+    // Contains most graphics, leaving margin room
+    this.visWidth = this.width - this.margins.left - this.margins.right;
+    this.visHeight = this.height - this.margins.top - this.margins.bottom;
+    this.vis
+        .attr('width', this.visWidth)
+        .attr('height', this.visHeight)
+        .attr('transform', 'translate(' + this.margins.left + ',' + this.margins.top + ')');
+
+    // Redefine scales used for drawing
+    this.yScale
+        .range([this.visHeight, 0]);
+    this.xScale
+        .range([0, this.visWidth]);            
 }
 
 }(this));
@@ -59,10 +110,10 @@ root.Zhart = function Zhart (context, options) {
     TODO: MOVE THIS STUFF OUT!
 */
 
-function Domain(options){
-    options = options || {};
-    this.push(options.min || 0);
-    this.push(options.max || 15);
+function Domain(domain){
+    domain = domain || [];
+    this.push(domain[0] || 0);
+    this.push(domain[1] || 15);
 }
 Domain.prototype = new Array();
 
