@@ -28,13 +28,17 @@ layers.xAxis = function xAxis(zhart){
         .orient('bottom')
         .ticks(3)
         .tickSize(1);
-    var xAxisSvg = zhart.vis.selectAll('g.x-axis')
-        .data([1])
-        .enter()
+    var xAxisGroup = zhart.vis.selectAll('g.x-axis')
+        .data([1]);
+    xAxisGroup.enter()
         .append('g')
-            .attr('class', 'x-axis')
-            .attr("transform", "translate(0," + zhart.height + ")")
-            .call(xAxis);
+            .attr('class', 'x-axis');
+    xAxisGroup
+        .attr("transform", "translate(0," + zhart.visHeight + ")")
+        .call(xAxis);
+    xAxisGroup
+        .exit()
+            .remove();
 };
 
 // A layer that draws the yAxis
@@ -44,16 +48,25 @@ layers.yAxis = function yAxis(zhart){
         .orient('left')
         .ticks(3)
         .tickSize(1);
-    var yAxisSvg = zhart.vis.selectAll('g.y-axis')
-        .data([1])
-        .enter()
+    var yAxisGroup = zhart.vis.selectAll('g.y-axis')
+        .data([1]);
+    yAxisGroup.enter()
         .append('g')
-            .attr('class', 'y-axis')
-            .call(yAxis);
+            .attr('class', 'y-axis');
+    yAxisGroup
+        .call(yAxis);
+    yAxisGroup
+        .exit()
+            .remove();
 };
 
 // A layer that draws lines for linegraph
-layers.line = function line(zhart, datasets){
+layers.line = function line(zhart){
+
+    // Trims off part of datasets that are outside of zhart.xDomain
+    var dataSets = _.map(zhart.dataSets, function(dataSet){
+        return dataSet.selectIntersection(zhart.xDomain);
+    })
 
     // Accepts data and returns a line path
     var lineFunc = d3.svg.line()
@@ -67,13 +80,13 @@ layers.line = function line(zhart, datasets){
 
     // Selects, enters, updates, then exits lines
     var lines = zhart.vis.selectAll('path.line')
-        .data(datasets)
+        .data(dataSets)
     lines.enter()
         .append('svg:path')
             // TODO: Improve classFunc and put these things in scss
             .style('fill', 'none')
             .attr('stroke', 'black')
-            .attr('stroke-width', 1.5);
+            .attr('stroke-width', 0.8);
     lines
         .attr('d', lineFunc)
         .attr('class', classFunc);
@@ -84,7 +97,12 @@ layers.line = function line(zhart, datasets){
 };
 
 // A function that draws an area for linegraph
-layers.area = function area(zhart, datasets){
+layers.area = function area(zhart){
+
+    // Trims off part of datasets that are outside of zhart.xDomain
+    var dataSets = _.map(zhart.dataSets, function(dataSet){
+        return dataSet.selectIntersection(zhart.xDomain);
+    })
 
     // Accepts data and returns an area path
     var areaFunc = d3.svg.area()
@@ -99,17 +117,14 @@ layers.area = function area(zhart, datasets){
 
     // Selects, enters, updates, then exits areas
     var areas = zhart.vis.selectAll('path.area')
-        .data(datasets);
+        .data(dataSets);
     areas.enter()
         .append('svg:path')
             // TODO: Improve classFunc and put these things in scss
             .style('fill', 'red')
             .style('opacity', 0.5)
             .attr('stroke', 'none')
-            .attr('stroke-width', 0)
-            .on('mouseover', function(){
-                console.log('ZHART')
-            });
+            .attr('stroke-width', 0);
     areas
         .attr('d', areaFunc)
         .attr('class', classFunc);
