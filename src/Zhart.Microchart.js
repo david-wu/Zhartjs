@@ -5,18 +5,18 @@ var Zhart = root.Zhart
 var features = Zhart.features('dragXDomain', 'dragYDomain');
 var layers = Zhart.layers('xAxis', 'yAxis', 'area', 'line');
 
-Zhart.prototype.Microchart = function (datasets, options) {
+Zhart.prototype.Microchart = function(){
     var that = this;
-    options = options || {};
+
+    // Initializes new features
+    _.each(features, function(feature){
+        feature(that);
+    });
 
     // TODO: extend current layers/features instead of overwriting
     this.layers = layers.slice();
     this.features = features.slice();
 
-    // // Initializes new features
-    _.each(features, function(feature){
-        feature(that, datasets, options);
-    });
 }
 
 }(this));

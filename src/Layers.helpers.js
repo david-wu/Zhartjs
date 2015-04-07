@@ -22,7 +22,7 @@ Zhart.layers = function(){
 var layers = Zhart.layers;
 
 // A layer that draws the xAxis
-layers.xAxis = function xAxis(zhart){
+layers.xAxis = function(zhart){
     var xAxis = d3.svg.axis()
         .scale(zhart.xScale)
         .orient('bottom')
@@ -42,7 +42,7 @@ layers.xAxis = function xAxis(zhart){
 };
 
 // A layer that draws the yAxis
-layers.yAxis = function yAxis(zhart){
+layers.yAxis = function(zhart){
     var yAxis = d3.svg.axis()
         .scale(zhart.yScale)
         .orient('left')
@@ -61,12 +61,12 @@ layers.yAxis = function yAxis(zhart){
 };
 
 // A layer that draws lines for linegraph
-layers.line = function line(zhart){
+layers.line = function(zhart){
 
     // Trims off part of datasets that are outside of zhart.xDomain
     var dataSets = _.map(zhart.dataSets, function(dataSet){
         return dataSet.selectIntersection(zhart.xDomain);
-    })
+    });
 
     // Accepts data and returns a line path
     var lineFunc = d3.svg.line()
@@ -76,11 +76,11 @@ layers.line = function line(zhart){
     // Accepts data and generates a class name
     var classFunc = function(d, index){
         return 'line '+index;
-    }
+    };
 
     // Selects, enters, updates, then exits lines
     var lines = zhart.vis.selectAll('path.line')
-        .data(dataSets)
+        .data(dataSets);
     lines.enter()
         .append('svg:path')
             // TODO: Improve classFunc and put these things in scss
@@ -97,12 +97,12 @@ layers.line = function line(zhart){
 };
 
 // A function that draws an area for linegraph
-layers.area = function area(zhart){
+layers.area = function(zhart){
 
     // Trims off part of datasets that are outside of zhart.xDomain
     var dataSets = _.map(zhart.dataSets, function(dataSet){
         return dataSet.selectIntersection(zhart.xDomain);
-    })
+    });
 
     // Accepts data and returns an area path
     var areaFunc = d3.svg.area()
@@ -113,7 +113,7 @@ layers.area = function area(zhart){
     // Accepts data and generates a class name
     var classFunc = function(d, index){
         return 'area '+index;
-    }
+    };
 
     // Selects, enters, updates, then exits areas
     var areas = zhart.vis.selectAll('path.area')

@@ -11,52 +11,49 @@
 root.Zhart = function Zhart (zhart) {
     var that = this;
 
-    // Sets default values and allows users to overwrite them
+    // Sets default values
     _.defaults(this, {
         layers: [],
         features: [],
         width: 300,
         height: 200,
-
-        // Margins seperate the labels, and axis from the center of the graph
         margins: {
             top: 10,
             left: 30,
             bottom: 30,
             right:10
         },
-
         // Scales used to draw within vis
         yScale: d3.scale.linear(),
         xScale: d3.scale.linear(),
-
         // Determines which section of the chart to show
         xDomain: new Domain(),
         yDomain: new Domain(),
 
     });
+
+    // Allow users to overwrite defaults on init
     _.extend(this, zhart);
 
     // A context must be provided.. for now..
-    if(!this.context){throw new TypeError('Context needed :( sorry')}
+    if(!this.context){throw new TypeError('Context needed :( sorry');}
     this.svg = d3.select(this.context)
         .append('svg')
         .classed('zhart', true);
-
     this.vis = this.svg.append('g')
         .classed('vis', true);
 
     // Initializes features
     _.each(this.features, function(feature){
         feature(that, that.datasets);
-    })
+    });
 
     // TODO: remove! (performance test)
     var tTime = 0;
     setInterval(function () {
         var t = Date.now();
         that.redraw();
-        tTime += (Date.now() - t)
+        tTime += (Date.now() - t);
     }, 16);
     setInterval(function(){
         console.log((tTime/10)+'% time spent redrawing');
@@ -65,7 +62,7 @@ root.Zhart = function Zhart (zhart) {
 
 
     return this;
-}
+};
 
 // Draws each layer
 root.Zhart.prototype.redraw = function(){
@@ -80,7 +77,7 @@ root.Zhart.prototype.redraw = function(){
     _.each(this.layers, function(layer){
         layer(that);
     });
-}
+};
 
 // Resizes svg and vis based on width, height, and margins
 root.Zhart.prototype.resize = function(){
@@ -102,7 +99,7 @@ root.Zhart.prototype.resize = function(){
         .range([this.visHeight, 0]);
     this.xScale
         .range([0, this.visWidth]);            
-}
+};
 
 }(this));
 
@@ -112,10 +109,10 @@ root.Zhart.prototype.resize = function(){
 
 function Domain(domain){
     domain = domain || [];
-    this.push(domain[0] || 0);
-    this.push(domain[1] || 15);
+    this[0] = domain[0] || 0;
+    this[1] = domain[1] || 15;
 }
-Domain.prototype = new Array();
+Domain.prototype = new Array(2);
 
 
 function DataSet(dataSet){

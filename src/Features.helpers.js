@@ -21,13 +21,13 @@ Zhart.features = function(){
 
 var features = Zhart.features;
 
-features.background = function background(zhart, datasets, options) {
+features.background = function(zhart, datasets, options) {
     var bgColor = options.bgColor || 'black';
     zhart.svg
         .style('background-color', bgColor);
 };
 
-features.text = function text (zhart, datasets, options) {
+features.text = function(zhart, datasets, options) {
     var text = options.text || 'what';
     zhart.svg.append('text')
         .attr('x', zhart.width/2)
@@ -35,11 +35,11 @@ features.text = function text (zhart, datasets, options) {
         .text(text);
 };
 
-features.dragXDomain = function dragXDomain(zhart){
+features.dragXDomain = function(zhart){
 
 	// Limit to one dragBehave per zhart.svg
 	var dragBehave = zhart.svg.dragBehave || d3.behavior.drag();
-	zhart.svg.dragBehave = dragBehave
+	zhart.svg.dragBehave = dragBehave;
 
 	// d3 events need to be namespaced
 	dragBehave
@@ -63,11 +63,11 @@ features.dragXDomain = function dragXDomain(zhart){
 	zhart.svg.call(dragBehave);
 };
 
-features.dragYDomain = function dragYDomain(zhart){
+features.dragYDomain = function(zhart){
 
 	// Limit to one dragBehave per zhart.svg
 	var dragBehave = zhart.svg.dragBehave || d3.behavior.drag();
-	zhart.svg.dragBehave = dragBehave
+	zhart.svg.dragBehave = dragBehave;
 
 	// d3 events need to be namespaced
 	dragBehave
