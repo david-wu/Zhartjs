@@ -45,7 +45,7 @@ root.Zhart = function Zhart (zhart) {
 
     // Initializes features
     _.each(this.features, function(feature){
-        feature(that, that.datasets);
+        feature.init(that);
     });
 
     // TODO: remove! (performance test)

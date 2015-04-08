@@ -21,19 +21,103 @@ Zhart.features = function(){
 
 var features = Zhart.features;
 
-features.background = function(zhart, datasets, options) {
-    var bgColor = options.bgColor || 'black';
-    zhart.svg
-        .style('background-color', bgColor);
-};
 
-features.text = function(zhart, datasets, options) {
-    var text = options.text || 'what';
-    zhart.svg.append('text')
-        .attr('x', zhart.width/2)
-        .attr('y', zhart.height/2)
-        .text(text);
-};
+features.background = (function(options){
+
+	// Options contains accessible feature attributes
+	options = _.isObject(options) || {};
+	_.defaults(options,{
+		color: 'grey'
+	});
+
+	// Used to safely change options values
+	function set(key, val){
+		if(_.isUndefined(options[key])){
+			throw new RangeError('set(key, val): Invalid key');
+		}
+		options[key] = val;
+		return feature;
+	}
+
+	// Initializes this feature
+	var svg;
+	function init(zhart){
+		destroy();
+	    svg = zhart.svg
+	        .style('background-color', options.color);
+    }
+
+	// Cleans up this feature
+	function destroy(){
+		if(!_.isUndefined(svg) && _.isFunction(svg.style))
+		svg
+	        .style('background-color', 'none');
+	}
+
+	// Accessible options and functions
+	var feature = {
+		options: options,
+		set: set,
+		init: init,
+		destroy: destroy
+	};
+	return feature;
+
+})();
+
+
+features.text = (function(options){
+
+	// Options contains accessible feature attributes
+	options = _.isObject(options) || {};
+	_.defaults(options,{
+		class: null,
+		text: 'default text',
+		x: 50,
+		y: 50,
+		color: 'black'
+	});
+
+	// Used to safely change options values
+	function set(key, val){
+		if(_.isUndefined(options[key])){
+			throw new RangeError('set(key, val): Invalid key');
+		}
+		options[key] = val;
+		return feature;
+	}
+
+	// Initializes this feature
+	var textEl;
+	function init(zhart){
+		destroy();
+	    textEl = zhart.svg.append('text')
+	    	.attr('class', options.class)
+	        .text(options.text)
+	        .attr('x', options.x)
+	        .attr('y', options.y)
+	        .attr('fill', options.color);
+	};
+
+	// Cleans up this feature
+	function destroy(){
+		if(textEl && _.isFunction(textEl.remove)){
+			textEl.remove();
+		}
+	}
+
+	// Accessible options and functions
+	var feature = {
+		options: options,
+		set: set,
+		init: init,
+		destroy: destroy
+	};
+	return feature;
+
+})();
+
+
 
 features.dragXDomain = function(zhart){
 

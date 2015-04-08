@@ -2,7 +2,10 @@
 'use strict';
 
 var Zhart = root.Zhart
-var features = Zhart.features('dragXDomain', 'dragYDomain');
+var features = Zhart.features('background', 'text');
+features[0].set('color', 'orange');
+features[1].set('color', 'purple');
+
 var layers = Zhart.layers('xAxis', 'yAxis', 'area', 'line');
 
 Zhart.prototype.Microchart = function(){
@@ -10,7 +13,7 @@ Zhart.prototype.Microchart = function(){
 
     // Initializes new features
     _.each(features, function(feature){
-        feature(that);
+        feature.init(that);
     });
 
     // TODO: extend current layers/features instead of overwriting
