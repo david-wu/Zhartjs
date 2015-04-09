@@ -75,7 +75,7 @@ root.Zhart.prototype.redraw = function(){
     this.yScale.domain(this.yDomain);
 
     _.each(this.layers, function(layer){
-        layer(that);
+        layer.draw(that);
     });
 };
 
