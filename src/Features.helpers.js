@@ -12,15 +12,11 @@
 */
 
 var Zhart = root.Zhart;
-
-Zhart.features = function(){
+var features = Zhart.features = function(){
 	return _.map(arguments, function(str){
 		return Zhart.features[str];
 	});
 };
-
-var features = Zhart.features;
-
 
 features.background = (function(options){
 
@@ -29,15 +25,6 @@ features.background = (function(options){
 	_.defaults(options,{
 		color: 'grey'
 	});
-
-	// Used to safely change options values
-	function set(key, val){
-		if(_.isUndefined(options[key])){
-			throw new RangeError('set(key, val): Invalid key');
-		}
-		options[key] = val;
-		return feature;
-	}
 
 	// Initializes this feature
 	var svg;
@@ -54,17 +41,14 @@ features.background = (function(options){
 	        .style('background-color', 'none');
 	}
 
-	// Accessible options and functions
-	var feature = {
+	return {
 		options: options,
-		set: set,
+		set: setOptions,
 		init: init,
 		destroy: destroy
 	};
-	return feature;
 
 })();
-
 
 features.text = (function(options){
 
@@ -77,15 +61,6 @@ features.text = (function(options){
 		y: 50,
 		color: 'black'
 	});
-
-	// Used to safely change options values
-	function set(key, val){
-		if(_.isUndefined(options[key])){
-			throw new RangeError('set(key, val): Invalid key');
-		}
-		options[key] = val;
-		return feature;
-	}
 
 	// Initializes this feature
 	var textEl;
@@ -106,73 +81,125 @@ features.text = (function(options){
 		}
 	}
 
-	// Accessible options and functions
-	var feature = {
+	return {
 		options: options,
-		set: set,
+		set: setOptions,
 		init: init,
 		destroy: destroy
 	};
-	return feature;
+})();
+
+features.dragXDomain = (function(options){
+
+	// Options contains accessible feature attributes
+	options = _.isObject(options) || {};
+	_.defaults(options,{
+	});
+
+	// Initializes this feature
+	function init(zhart){
+
+		// Limit to one dragBehave per zhart.svg
+		var dragBehave = zhart.svg.dragBehave || d3.behavior.drag();
+		zhart.svg.dragBehave = dragBehave;
+		destroy();
+
+		// d3 events need to be namespaced
+		dragBehave
+			.on('dragstart.xDomain', dragStart)
+			.on('drag.xDomain', drag)
+			.on('dragend.xDomain', dragEnd);
+		function dragStart(d) {
+			d3.event.sourceEvent.stopPropagation();
+			d3.select(this)
+				.classed('dragging', true);
+		}
+		function drag(d) {
+			var xShift = zhart.xScale.invert(0) - zhart.xScale.invert(d3.event.dx);
+			zhart.xDomain[0] += xShift;
+			zhart.xDomain[1] += xShift;
+		}
+		function dragEnd(d) {
+			d3.select(this)
+				.classed('dragging', false);
+		}
+		zhart.svg.call(dragBehave);
+
+	}
+
+	// Cleans up this feature
+	function destroy () {
+		// TODO
+	}
+
+	return {
+		options: options,
+		set: setOptions,
+		init: init,
+		destroy: destroy
+	};
 
 })();
 
+features.dragYDomain = (function(options){
 
+	// Options contains accessible feature attributes
+	options = _.isObject(options) || {};
+	_.defaults(options,{
+	});
 
-features.dragXDomain = function(zhart){
+	// Initializes this feature
+	function init(zhart){
 
-	// Limit to one dragBehave per zhart.svg
-	var dragBehave = zhart.svg.dragBehave || d3.behavior.drag();
-	zhart.svg.dragBehave = dragBehave;
+		// Limit to one dragBehave per zhart.svg
+		var dragBehave = zhart.svg.dragBehave || d3.behavior.drag();
+		zhart.svg.dragBehave = dragBehave;
 
-	// d3 events need to be namespaced
-	dragBehave
-		.on('dragstart.xDomain', dragStart)
-		.on('drag.xDomain', drag)
-		.on('dragend.xDomain', dragEnd);
-	function dragStart(d) {
-		d3.event.sourceEvent.stopPropagation();
-		d3.select(this)
-			.classed('dragging', true);
+		// d3 events need to be namespaced
+		dragBehave
+			.on('dragstart.yDomain', dragStart)
+			.on('drag.yDomain', drag)
+			.on('dragend.yDomain', dragEnd);
+		function dragStart(d) {
+			d3.event.sourceEvent.stopPropagation();
+			d3.select(this)
+				.classed('dragging', true);
+		}
+		function drag(d) {
+			var yShift = zhart.yScale.invert(0) - zhart.yScale.invert(d3.event.dy);
+			zhart.yDomain[0] += yShift;
+			zhart.yDomain[1] += yShift;
+		}
+		function dragEnd(d) {
+			d3.select(this)
+				.classed('dragging', false);
+		}
+		zhart.svg.call(dragBehave);
+	};
+
+	// Cleans up this feature
+	function destroy(){
+		// TODO
 	}
-	function drag(d) {
-		var xShift = zhart.xScale.invert(0) - zhart.xScale.invert(d3.event.dx);
-		zhart.xDomain[0] += xShift;
-		zhart.xDomain[1] += xShift;
-	}
-	function dragEnd(d) {
-		d3.select(this)
-			.classed('dragging', false);
-	}
-	zhart.svg.call(dragBehave);
-};
 
-features.dragYDomain = function(zhart){
+	return {
+		options: options,
+		set: setOptions,
+		init: init,
+		destroy: destroy
+	};
+})();
 
-	// Limit to one dragBehave per zhart.svg
-	var dragBehave = zhart.svg.dragBehave || d3.behavior.drag();
-	zhart.svg.dragBehave = dragBehave;
-
-	// d3 events need to be namespaced
-	dragBehave
-		.on('dragstart.yDomain', dragStart)
-		.on('drag.yDomain', drag)
-		.on('dragend.yDomain', dragEnd);
-	function dragStart(d) {
-		d3.event.sourceEvent.stopPropagation();
-		d3.select(this)
-			.classed('dragging', true);
+// Used to safely change option's values
+function setOptions(key, val){
+	if(_.isUndefined(this.options[key])){
+		throw new RangeError('set('+key+', '+val+'): Invalid key');
 	}
-	function drag(d) {
-		var yShift = zhart.yScale.invert(0) - zhart.yScale.invert(d3.event.dy);
-		zhart.yDomain[0] += yShift;
-		zhart.yDomain[1] += yShift;
+	if((key === 'init') || (key === 'destroy')){
+		throw new RangeError('can not set init or destroy');
 	}
-	function dragEnd(d) {
-		d3.select(this)
-			.classed('dragging', false);
-	}
-	zhart.svg.call(dragBehave);
-};
+	this.options[key] = val;
+	return this;
+}
 
 })(this);

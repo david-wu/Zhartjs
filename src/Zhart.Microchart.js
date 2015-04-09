@@ -2,9 +2,14 @@
 'use strict';
 
 var Zhart = root.Zhart
-var features = Zhart.features('background', 'text');
-features[0].set('color', 'orange');
-features[1].set('color', 'purple');
+var features = Zhart.features('background', 'text', 'dragXDomain', 'dragYDomain');
+features[0]
+	.set('color', 'orange')
+	.set('color', 'yellow');
+features[1]
+	.set('color', 'purple')
+	.set('x', 200);
+
 
 var layers = Zhart.layers('xAxis', 'yAxis', 'area', 'line');
 
