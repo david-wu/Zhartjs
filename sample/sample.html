@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sample</title>
+    <link rel="stylesheet" href="../Zhart.css">
+    <script src="../bower_components/d3/d3.js"></script>
+    <script src="../bower_components/lazy.js/lazy.js"></script>
+    <script src="../bower_components/lodash/lodash.js"></script>
+    <script src="../Zhart.js"></script>
+</head>
+<body>
+    <!-- Testing chart -->
+    <div id="zhart">
+    </div>
+    <div id="zhart2">
+    </div>
+
+    <script>
+    window.onload = function () {
+        var context = document.getElementById('zhart');
+        var context2 = document.getElementById('zhart2');
+
+        var now = Date.now();
+        var dataSets = [
+            new DataSet([[now,0]]),
+            new DataSet([[now,0]])
+        ];
+
+        var xDomain = new Domain([now-20000, now-1000]);
+        var yDomain = new Domain([0,10]);
+
+        window.zhart = new Zhart({
+            context: context2,
+            width: 500,
+            height: 300,
+            dataSets: dataSets,
+            xDomain: xDomain,
+            yDomain: yDomain
+        })
+            .Microchart();
+
+
+        window.zhart = new Zhart({
+            context: context,
+            width: 500,
+            height: 80,
+            dataSets: dataSets,
+            xDomain: xDomain,
+            yDomain: yDomain
+        })
+            .Microchart();
+
+        // Crappy fake data
+        setInterval(function(){
+            _.each(dataSets, function(set){
+                set.push([_.last(set)[0]+1000, Math.random(10)*10]);
+            });
+        },100);
+
+    };
+    </script>
+</body>
+</html>
