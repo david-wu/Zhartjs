@@ -8,7 +8,7 @@
  * @param {options}
  */
 
-root.Zhart = function Zhart (zhart) {
+root.Zhart = function Zhart(zhart) {
     var that = this;
 
     // Sets default values
@@ -27,14 +27,13 @@ root.Zhart = function Zhart (zhart) {
         yScale: d3.scale.linear(),
         xScale: d3.scale.linear(),
         // Determines which section of the chart to show
-        xDomain: new Domain(),
-        yDomain: new Domain(),
-
+        xDomain: new Domain([0,10]),
+        yDomain: new Domain([0,10])
     });
 
     // Allow users to overwrite defaults on init
     _.extend(this, zhart);
-
+    
     // A context must be provided.. for now..
     if(!this.context){throw new TypeError('Context needed :( sorry');}
     this.svg = d3.select(this.context)
@@ -108,11 +107,29 @@ root.Zhart.prototype.resize = function(){
 */
 
 function Domain(domain){
-    domain = domain || [];
-    this[0] = domain[0] || 0;
-    this[1] = domain[1] || 15;
+    if(!domain || !_.isArray(domain) || domain.length!==2 ){
+        console.log(domain)
+        throw new RangeError('Invalid Domain');
+    }
+    domain.startTime = startTime;
+    domain.stopTime = stopTime;
+    return domain;
 }
-Domain.prototype = new Array(2);
+function startTime(){
+    var that = this;
+    this.stopTime();
+    var time = Date.now();
+    this.realTimeInterval = setInterval(function(){
+        var timePassed = Date.now()-time;
+        that[0] += timePassed;
+        that[1] += timePassed;
+        time = Date.now();
+    },16);
+}
+function stopTime(){
+    clearInterval(this.realTimeInterval);
+    this.realTimeInterval = null;
+}
 
 
 function DataSet(dataSet){
@@ -131,11 +148,10 @@ function selectIntersection(xDomain, bufferRatio){
     return this.slice(lowerEnd, upperEnd);
 }
 
-
 // Given a target x value, find the closest point's index, improve speed by using spacing
 // Could replace with binary search
 function closestXIndex(target, spacing){
-    spacing = spacing || 1;
+    spacing = spacing || 1000;
 
     // Estimate index of closestXIndex using spacing
     var index = Math.round((target-this[0][0])/spacing);

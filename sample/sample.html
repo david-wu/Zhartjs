@@ -8,7 +8,11 @@
     <script src="../bower_components/d3/d3.js"></script>
     <script src="../bower_components/lazy.js/lazy.js"></script>
     <script src="../bower_components/lodash/lodash.js"></script>
-    <script src="../Zhart.js"></script>
+    <script src="../src/Zhart.Core.js"></script>
+    <script src="../src/Zhart.helpers.js"></script>
+    <script src="../src/Features.helpers.js"></script>
+    <script src="../src/Layers.helpers.js"></script>
+    <script src="../src/Zhart.Microchart.js"></script>
 </head>
 <body>
     <!-- Testing chart -->
@@ -29,6 +33,7 @@
         ];
 
         var xDomain = new Domain([now-20000, now-1000]);
+        xDomain.startTime();
         var yDomain = new Domain([0,10]);
 
         window.zhart = new Zhart({
@@ -40,7 +45,6 @@
             yDomain: yDomain
         })
             .Microchart();
-
 
         window.zhart = new Zhart({
             context: context,
@@ -57,7 +61,7 @@
             _.each(dataSets, function(set){
                 set.push([_.last(set)[0]+1000, Math.random(10)*10]);
             });
-        },100);
+        },1000);
 
     };
     </script>

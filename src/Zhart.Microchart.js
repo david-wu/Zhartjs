@@ -6,7 +6,7 @@ var Zhart = root.Zhart
 Zhart.prototype.Microchart = function(){
     var that = this;
 
-	var features = Zhart.features('background', 'text', 'dragXDomain', 'realTime');
+	var features = Zhart.features('background', 'text', 'dragXDomain');
 	features[0]
 		.set('color', 'orange')
 		.set('color', 'yellow');

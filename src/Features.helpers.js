@@ -18,42 +18,6 @@ var features = Zhart.features = function(){
 	});
 };
 
-features.realTime = (function(options){
-console.log(options)
-	// Options contains accessible feature attributes
-	options = _.isObject(options) || {};
-	_.defaults(options,{
-		active: true
-	});
-
-	var interval;
-	function init(zhart){
-		destroy();
-
-		var time = Date.now();
-		interval = setInterval(function(){
-			var timePassed = Date.now() - time;
-			if(options.active){
-				zhart.xDomain[0] += timePassed;
-				zhart.xDomain[1] += timePassed;				
-			}
-			time = Date.now();
-		},16);
-	}
-
-	function destroy(){
-		clearInterval(interval);
-	}
-
-	return {
-		options: options,
-		set: setOptions,
-		init: init,
-		destroy: destroy
-	};
-
-});
-
 features.background = (function(options){
 
 	// Options contains accessible feature attributes
