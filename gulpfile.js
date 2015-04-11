@@ -9,7 +9,11 @@ var gulp = require('gulp')
     , htmlv = require('gulp-html-validator')
     , sass = require('gulp-sass')
     , minifyCss = require('gulp-minify-css')
-    , concatCss = require('gulp-concat-css');
+    , concatCss = require('gulp-concat-css')
+    , browserify = require('browserify')
+    , source = require('vinyl-source-stream')
+    , buffer = require('vinyl-buffer');
+
 
 var srcDir = './src/';
 
@@ -17,25 +21,38 @@ var srcDir = './src/';
  * Compiles all the files in src/ into Zhart.js and Zhart.min.js
  * note: Zhart.Core.js has to be first.
  */
-gulp.task('build', function () {
-    var srcFiles = [srcDir + 'Zhart.Core.js'];
-    srcFiles.push(srcDir + 'Zhart.helpers.js');
+//gulp.task('build', function () {
+//    var srcFiles = [srcDir + 'Zhart.Core.js'];
+//    srcFiles.push(srcDir + 'Zhart.helpers.js');
+//    var outputDir = '.';
+//
+//    srcFiles.push(srcDir+'*');
+//
+//    util.log(srcFiles);
+//
+//    return gulp.src(srcFiles)
+//        .pipe(concat('Zhart.js'))
+//        .pipe(gulp.dest(outputDir))
+//        .pipe(uglify({preserveComments: 'some'}))
+//        .pipe(concat('Zhart.min.js'))
+//        .pipe(gulp.dest(outputDir));
+//});
+
+gulp.task('build', function() {
     var outputDir = '.';
 
-    srcFiles.push(srcDir+'*');
-
-    util.log(srcFiles);
-
-    return gulp.src(srcFiles)
-        .pipe(concat('Zhart.js'))
-        .pipe(gulp.dest(outputDir))
+    return browserify(srcDir + 'init.js')
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest('./'))
+        .pipe(buffer())
         .pipe(uglify({preserveComments: 'some'}))
-        .pipe(concat('Zhart.min.js'))
+        .pipe(concat('bundle.min.js'))
         .pipe(gulp.dest(outputDir));
 });
 
 gulp.task('buildCss', function () {
-    var srcFiles = [];
+    var srcFiles = ['./scss/*'];
     var outputDir = '.';
 
     srcFiles.push('.tempcss/*');

@@ -1,4 +1,4 @@
-(function(root){
+var _ = require('lodash');
 
 /*
 	layers lets you retrieve the corresponding layer functions
@@ -11,15 +11,11 @@
 		=> func
 */
 
-var Zhart = root.Zhart;
-
-Zhart.layers = function(){
-	return _.map(arguments, function(str){
-		return Zhart.layers[str];
-	});
+var layers = function(){
+    return _.map(arguments, function(str){
+       return layers[str];
+    });
 };
-
-var layers = Zhart.layers;
 
 // A layer that draws the xAxis
 layers.xAxis = (function(options){
@@ -224,4 +220,4 @@ function setOptions(key, val){
     return this;
 }
 
-})(this);
+module.exports = layers;

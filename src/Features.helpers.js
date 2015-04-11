@@ -1,4 +1,4 @@
-(function(root){
+var _ = require('lodash');
 
 /*
 	features lets you retrieve the corresponding features functions
@@ -11,10 +11,9 @@
 		=> func
 */
 
-var Zhart = root.Zhart;
-var features = Zhart.features = function(){
+var features = function(){
 	return _.map(arguments, function(str){
-		return Zhart.features[str]();
+		return features[str]();
 	});
 };
 
@@ -72,7 +71,7 @@ features.text = (function(options){
 	        .attr('x', options.x)
 	        .attr('y', options.y)
 	        .attr('fill', options.color);
-	};
+	}
 
 	// Cleans up this feature
 	function destroy(){
@@ -175,7 +174,7 @@ features.dragYDomain = (function(options){
 				.classed('dragging', false);
 		}
 		zhart.svg.call(dragBehave);
-	};
+	}
 
 	// Cleans up this feature
 	function destroy(){
@@ -202,4 +201,4 @@ function setOptions(key, val){
 	return this;
 }
 
-})(this);
+module.exports = features;

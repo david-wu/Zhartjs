@@ -1,5 +1,8 @@
-(function(root) {
-'use strict';
+var _ = require('lodash')
+    , d3 = require('d3')
+    , Domain = require('./Zhart.Domain')
+    , features = require('./Features.helpers')
+    , layers = require('./Layers.helpers');
 
 /**
  * Creates the Zhart base class, initalize the svg on which to draw all
@@ -8,7 +11,7 @@
  * @param {options}
  */
 
-root.Zhart = function Zhart(zhart) {
+function Zhart (zhart) {
     var that = this;
 
     // Sets default values
@@ -59,12 +62,11 @@ root.Zhart = function Zhart(zhart) {
         tTime = 0;
     }, 1000);
 
-
     return this;
-};
+}
 
 // Draws each layer
-root.Zhart.prototype.redraw = function(){
+Zhart.prototype.redraw = function(){
     var that = this;
 
     this.resize();
@@ -78,8 +80,12 @@ root.Zhart.prototype.redraw = function(){
     });
 };
 
+Zhart.features = features;
+
+Zhart.layers = layers;
+
 // Resizes svg and vis based on width, height, and margins
-root.Zhart.prototype.resize = function(){
+Zhart.prototype.resize = function(){
 
     this.svg
         .attr('width', this.width)
@@ -99,8 +105,6 @@ root.Zhart.prototype.resize = function(){
     this.xScale
         .range([0, this.visWidth]);            
 };
-
-}(this));
 
 /*
     TODO: MOVE THIS STUFF OUT!
@@ -186,4 +190,34 @@ function closestXIndex(target, spacing){
     }
 }
 
+Zhart.prototype.microchart = function(){
+  var that = this;
 
+  var features = Zhart.features('background', 'text', 'dragXDomain');
+  features[0]
+    .set('color', 'orange')
+    .set('color', 'yellow');
+  features[1]
+    .set('color', 'purple')
+    .set('x', 200);
+
+  var layers = Zhart.layers('xAxis', 'yAxis', 'area', 'line');
+  layers[0]
+    .set('ticks', '5')
+    .set('orient', 'bottom');
+  layers[2]
+    .set('interpolate', 'basis');
+  layers[3]
+    .set('interpolate', 'basis');
+
+  // Initializes new features
+  _.each(features, function(feature){
+    feature.init(that);
+  });
+
+  // TODO: extend current layers/features instead of overwriting
+  this.layers = layers.slice();
+  this.features = features.slice();
+};
+
+module.exports = Zhart;
