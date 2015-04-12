@@ -1,8 +1,9 @@
-var _ = require('lodash')
-    , d3 = require('d3')
-    , Domain = require('./Zhart.Domain')
-    , features = require('./Features.helpers')
-    , layers = require('./Layers.helpers');
+var _ = require('lodash');
+var d3 = require('d3');
+var Domain = require('./Zhart.Domain');
+
+Zhart.features = require('./Features.helpers');
+Zhart.layers = require('./Layers.helpers');
 
 /**
  * Creates the Zhart base class, initalize the svg on which to draw all
@@ -79,10 +80,6 @@ Zhart.prototype.redraw = function(){
         layer.draw(that);
     });
 };
-
-Zhart.features = features;
-
-Zhart.layers = layers;
 
 // Resizes svg and vis based on width, height, and margins
 Zhart.prototype.resize = function(){
@@ -195,8 +192,7 @@ Zhart.prototype.microchart = function(){
 
   var features = Zhart.features('background', 'text', 'dragXDomain');
   features[0]
-    .set('color', 'orange')
-    .set('color', 'yellow');
+    .set('color', 'orange');
   features[1]
     .set('color', 'purple')
     .set('x', 200);

@@ -40,4 +40,4 @@ setInterval(function(){
     _.each(dataSets, function(set){
         set.push([_.last(set)[0]+1000, Math.random(10)*10]);
     });
-},100);
+},1000);
