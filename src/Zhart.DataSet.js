@@ -1,5 +1,6 @@
 var _ = require('lodash');
 
+// Used to hold DataSet values
 function DataSet(dataSet){
   dataSet.closestXIndex = closestXIndex;
   dataSet.selectIntersection = selectIntersection;

@@ -1,20 +1,18 @@
-var Zhart = require('./Zhart.Core');
-var DataSet = require('./Zhart.DataSet');
-var Domain = require('./Zhart.Domain');
 var _ = require('lodash');
+var Zhart = require('./Zhart.Core');
 
 var context = document.getElementById('zhart');
 var context2 = document.getElementById('zhart2');
 
 var now = Date.now();
 var dataSets = [
-    new DataSet([[now,0]]),
-    new DataSet([[now,0]])
+    new Zhart.DataSet([[now,0]]),
+    new Zhart.DataSet([[now,0]])
 ];
 
-var xDomain = new Domain([now-20000, now-1000]);
+var xDomain = new Zhart.Domain([now-20000, now-1000]);
 xDomain.startTime();
-var yDomain = new Domain([0,10]);
+var yDomain = new Zhart.Domain([0,10]);
 
 new Zhart({
     context: context2,

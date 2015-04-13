@@ -13,12 +13,12 @@ var _ = require('lodash');
 
 var layers = function(){
     return _.map(arguments, function(str){
-       return layers[str];
+       return layers[str]();
     });
 };
 
 // A layer that draws the xAxis
-layers.xAxis = (function(options){
+layers.xAxis = function(options){
 
     // Options contains accessible feature attributes
     options = _.isObject(options) || {};
@@ -59,10 +59,10 @@ layers.xAxis = (function(options){
         draw: draw
     };
 
-})();
+};
 
 // A layer that draws the yAxis
-layers.yAxis = (function(options){
+layers.yAxis = function(options){
 
     // Options contains accessible feature attributes
     options = _.isObject(options) || {};
@@ -95,10 +95,10 @@ layers.yAxis = (function(options){
         set: setOptions,
         draw: draw
     };
-})();
+};
 
 // A layer that draws lines for linegraph
-layers.line = (function(options){
+layers.line = function(options){
 
     // Options contains accessible feature attributes
     options = _.isObject(options) || {};
@@ -134,7 +134,8 @@ layers.line = (function(options){
                 // TODO: Improve classFunc and put these things in scss
                 .style('fill', 'none')
                 .attr('stroke', options.stroke)
-                .attr('stroke-width', options.strokeWidth);
+                .attr('stroke-width', options.strokeWidth)
+                .attr('clip-path', 'url("#clipper")');
         lines
             .attr('d', lineFunc)
             .attr('class', classFunc);
@@ -150,10 +151,10 @@ layers.line = (function(options){
         draw: draw
     };
 
-})();
+};
 
 // A function that draws an area for linegraph
-layers.area = (function(options){
+layers.area = function(options){
 
     // Options contains accessible feature attributes
     options = _.isObject(options) || {};
@@ -190,7 +191,9 @@ layers.area = (function(options){
                 .style('fill', options.fill)
                 .style('opacity', 0.5)
                 .attr('stroke', 'none')
-                .attr('stroke-width', 0);
+                .attr('stroke-width', 0)
+                .attr('clip-path', 'url("#clipper")');
+
         areas
             .attr('d', areaFunc)
             .attr('class', classFunc);
@@ -206,7 +209,7 @@ layers.area = (function(options){
         draw: draw
     };
 
-})();
+};
 
 // Used to safely change option's values
 function setOptions(key, val){

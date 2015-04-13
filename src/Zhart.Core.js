@@ -1,18 +1,14 @@
 var _ = require('lodash');
 var d3 = require('d3');
-var Domain = require('./Zhart.Domain');
-
-Zhart.features = require('./Features.helpers');
-Zhart.layers = require('./Layers.helpers');
+Zhart.Domain = Domain = require('./Zhart.Domain');
+Zhart.DataSet = DataSet = require('./Zhart.DataSet');
+Zhart.Features = Features = require('./Features.helpers');
+Zhart.Layers = Layers = require('./Layers.helpers');
 
 /**
- * Creates the Zhart base class, initalize the svg on which to draw all
- * other graphs.
- * @param {svg}
- * @param {options}
+ * Creates the Zhart base class
  */
-
-function Zhart (zhart) {
+function Zhart(zhart){
     var that = this;
 
     // Sets default values
@@ -31,8 +27,8 @@ function Zhart (zhart) {
         yScale: d3.scale.linear(),
         xScale: d3.scale.linear(),
         // Determines which section of the chart to show
-        xDomain: new Domain([0,10]),
-        yDomain: new Domain([0,10])
+        xDomain: new Zhart.Domain([0,10]),
+        yDomain: new Zhart.Domain([0,10])
     });
 
     // Allow users to overwrite defaults on init
@@ -46,6 +42,12 @@ function Zhart (zhart) {
     this.vis = this.svg.append('g')
         .classed('vis', true);
 
+    // Used to clip the graph to only draw within a rect
+    this.clipper = this.svg.append('defs')
+        .append('clipPath')
+            .attr('id', 'clipper')
+            .append('rect')
+
     // Initializes features
     _.each(this.features, function(feature){
         feature.init(that);
@@ -56,7 +58,7 @@ function Zhart (zhart) {
     setInterval(function () {
         var t = Date.now();
         that.redraw();
-        tTime += (Date.now() - t);
+        tTime += (Date.now() -  t);
     }, 16);
     setInterval(function(){
         console.log((tTime/10)+'% time spent redrawing');
@@ -76,7 +78,7 @@ Zhart.prototype.redraw = function(){
     this.xScale.domain(this.xDomain);
     this.yScale.domain(this.yDomain);
 
-    _.each(this.layers, function(layer){
+    _.each(this.Layers, function(layer){
         layer.draw(that);
     });
 };
@@ -96,6 +98,10 @@ Zhart.prototype.resize = function(){
         .attr('height', this.visHeight)
         .attr('transform', 'translate(' + this.margins.left + ',' + this.margins.top + ')');
 
+    this.clipper
+        .attr('width', this.visWidth)
+        .attr('height', this.visHeight)
+
     // Redefine scales used for drawing
     this.yScale
         .range([this.visHeight, 0]);
@@ -103,101 +109,18 @@ Zhart.prototype.resize = function(){
         .range([0, this.visWidth]);            
 };
 
-/*
-    TODO: MOVE THIS STUFF OUT!
-*/
-
-function Domain(domain){
-    if(!domain || !_.isArray(domain) || domain.length!==2 ){
-        console.log(domain)
-        throw new RangeError('Invalid Domain');
-    }
-    domain.startTime = startTime;
-    domain.stopTime = stopTime;
-    return domain;
-}
-function startTime(){
-    var that = this;
-    this.stopTime();
-    var time = Date.now();
-    this.realTimeInterval = setInterval(function(){
-        var timePassed = Date.now()-time;
-        that[0] += timePassed;
-        that[1] += timePassed;
-        time = Date.now();
-    },16);
-}
-function stopTime(){
-    clearInterval(this.realTimeInterval);
-    this.realTimeInterval = null;
-}
-
-
-function DataSet(dataSet){
-    dataSet.closestXIndex = closestXIndex;
-    dataSet.selectIntersection = selectIntersection;
-    return dataSet;
-}
-
-// Given an xDomain, find the slice of the dataset that is inside within the domain +- bufferRatio
-function selectIntersection(xDomain, bufferRatio){
-    // Buffer is how much more I want to select outide of the xDomain
-    bufferRatio = bufferRatio || 0.3;
-    var buffer = (xDomain[1] - xDomain[0])*bufferRatio;
-    var lowerEnd = this.closestXIndex(xDomain[0]-buffer);
-    var upperEnd = this.closestXIndex(xDomain[1]+buffer)+1;
-    return this.slice(lowerEnd, upperEnd);
-}
-
-// Given a target x value, find the closest point's index, improve speed by using spacing
-// Could replace with binary search
-function closestXIndex(target, spacing){
-    spacing = spacing || 1000;
-
-    // Estimate index of closestXIndex using spacing
-    var index = Math.round((target-this[0][0])/spacing);
-
-    // If unable to estimate, check if first or last value is closer to target
-    if(_.isUndefined(this[index])){
-        if( (_.last(this)[0] - target) < (target - _.first(this)[0])){
-            index = this.length-1;
-        }else{
-            index = 0;
-        }
-    }
-
-    // Finds closestXIndex to within one
-    while(!_.isUndefined(this[index-1]) && this[index][0] > target){
-        index--;
-    }
-    while(!_.isUndefined(this[index+1]) && this[index][0] < target){
-        index++;
-    }
-
-    // Now find out if this[index-1] or this[index] is closer to target
-    if(_.isUndefined(this[index-1])){
-        return index;
-    }
-    var diffLeft = target - this[index-1][0];
-    var diffRight = this[index][0] - target;
-    if(diffLeft < diffRight){
-        return index-1;
-    }else{
-        return index;
-    }
-}
-
+// Apply preset features and layers
 Zhart.prototype.microchart = function(){
   var that = this;
 
-  var features = Zhart.features('background', 'text', 'dragXDomain');
+  var features = Zhart.Features('background', 'text', 'dragXDomain');
   features[0]
     .set('color', 'orange');
   features[1]
     .set('color', 'purple')
     .set('x', 200);
 
-  var layers = Zhart.layers('xAxis', 'yAxis', 'area', 'line');
+  var layers = Zhart.Layers('xAxis', 'yAxis', 'area', 'line');
   layers[0]
     .set('ticks', '5')
     .set('orient', 'bottom');
@@ -212,7 +135,7 @@ Zhart.prototype.microchart = function(){
   });
 
   // TODO: extend current layers/features instead of overwriting
-  this.layers = layers.slice();
+  this.Layers = layers.slice();
   this.features = features.slice();
 };
 
